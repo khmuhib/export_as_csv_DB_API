@@ -1,16 +1,3 @@
-<?php
-
-$api_url = 'https://jsonplaceholder.typicode.com/posts';
-
-// Read JSON file
-$json_data = file_get_contents($api_url);
-
-// Decode JSON data into PHP array
-$response_data = json_decode($json_data);
-
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -18,37 +5,115 @@ $response_data = json_decode($json_data);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+
+    <!-- Add CSS styles for loader -->
+    <style>
+        .loader {
+            border: 16px solid #f3f3f3;
+            border-top: 16px solid #3498db;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 1s linear infinite;
+            margin: auto;
+            margin-top: 20px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-    <button>Generate</button>
-    <a href="export_api.php">Export</a>
-    <button>Save</button>
+    <!-- Add loader container -->
+    <div id="loader" class="loader" style="display:none;"></div>
 
-    <table border="1">
+    <button onclick="generateData()">Generate</button>
+    <a href="export_api.php">Export</a>
+    <button onclick="saveData()">Save</button>
+
+    <table border="1" id="data-table">
         <tr>
             <th>ID</th>
-            <th>Name</th>
-            <th>Age</th>
+            <th>Title</th>
+            <th>Body</th>
         </tr>
-
-        <?php
-        foreach ($response_data as $data) {
-        ?>
-            <tr>
-                <td><?php echo $data->id; ?></td>
-                <td><?php echo $data->title; ?></td>
-                <td><?php echo $data->body; ?></td>
-            </tr>
-        <?php
-        }
-        ?>
     </table>
 
     <ul>
 
     </ul>
+
+    <!-- Add JavaScript for loader display and API call -->
+    <script>
+        function showLoader() {
+            var loaderElement = document.getElementById("loader");
+            if (loaderElement) {
+                loaderElement.style.display = "block";
+            } else {
+                console.error("Loader element not found");
+            }
+        }
+
+        function hideLoader() {
+            var loaderElement = document.getElementById("loader");
+            if (loaderElement) {
+                loaderElement.style.display = "none";
+            } else {
+                console.error("Loader element not found");
+            }
+        }
+
+        async function generateData() {
+            showLoader();
+
+            try {
+                const api_url = "https://jsonplaceholder.typicode.com/posts";
+                const response = await fetch(api_url);
+                const data = await response.json();
+                populateTable(data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            } finally {
+                hideLoader();
+            }
+        }
+
+        function populateTable(data) {
+            var table = document.getElementById("data-table");
+            // table.innerHTML = ""; // Clear existing table data
+
+            for (var i = 0; i < data.length; i++) {
+                var row = table.insertRow(); // Without specifying an index, it adds a new row at the end
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+
+                cell1.innerHTML = data[i].id;
+                cell2.innerHTML = data[i].title;
+                cell3.innerHTML = data[i].body;
+            }
+        }
+
+
+        function saveData() {
+            showLoader();
+            // Add your save data logic here
+            // After data is saved, call hideLoader() to hide the loader
+            // For simplicity, I'm using a setTimeout to simulate data saving
+            setTimeout(function() {
+                hideLoader();
+            }, 2000);
+        }
+    </script>
 
 </body>
 
