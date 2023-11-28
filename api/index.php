@@ -37,7 +37,8 @@
     <div id="loader" class="loader" style="display:none;"></div>
 
     <button onclick="generateData()">Generate</button>
-    <a href="export_api.php">Export</a>
+    <button onclick="exportToCSV()">Export</button>
+    <!-- <a href="export_api.php">Export</a> -->
     <button onclick="saveData()">Save</button>
 
     <table border="1" id="data-table">
@@ -112,6 +113,43 @@
             setTimeout(function() {
                 hideLoader();
             }, 2000);
+        }
+
+        function exportToCSV() {
+            var table = document.getElementById("data-table");
+            var rows = table.getElementsByTagName("tr");
+            var csvContent = "data:text/csv;charset=utf-8,";
+
+            // Get the table headers
+            var headerRow = rows[0];
+            var headerCells = headerRow.getElementsByTagName("th");
+            var headerArray = [];
+
+            for (var h = 0; h < headerCells.length; h++) {
+                headerArray.push(headerCells[h].innerText);
+            }
+
+            csvContent += headerArray.join(",") + "\n";
+
+            // Get the table data
+            for (var i = 1; i < rows.length; i++) {
+                var cells = rows[i].getElementsByTagName("td");
+                var rowArray = [];
+
+                for (var j = 0; j < cells.length; j++) {
+                    rowArray.push(cells[j].innerText);
+                }
+
+                csvContent += rowArray.join(",") + "\n";
+            }
+
+            // Create a download link
+            var encodedUri = encodeURI(csvContent);
+            var link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "table_data.csv");
+            document.body.appendChild(link);
+            link.click();
         }
     </script>
 
