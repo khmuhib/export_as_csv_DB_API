@@ -8,6 +8,14 @@
 
     <!-- Add CSS styles for loader -->
     <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #F1F2F7;
+            font-family: tahoma;
+        }
+
+        /* Loader CSS Start */
         .loader {
             border: 16px solid #f3f3f3;
             border-top: 16px solid #3498db;
@@ -28,30 +36,102 @@
                 transform: rotate(360deg);
             }
         }
+
+        /* Loader CSS End */
+
+        .myMain {
+            background-color: #F1F2F7;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .myMid {
+            background-color: #fff;
+            width: 90%;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            margin-top: 20px;
+        }
+
+        .myButtonDiv {
+            display: flex;
+            justify-content: end;
+        }
+
+        .myButton {
+            display: inline-block;
+            padding: 6px 12px;
+            margin-bottom: 0;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1.42857143;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            -ms-touch-action: manipulation;
+            touch-action: manipulation;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            background-image: none;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            background-color: #1fb5ad;
+            color: #fff;
+            margin: 4px 2px;
+        }
+
+        .myButton:hover {
+            background-color: #1CA59E;
+        }
+
+        .mytable {
+            border-collapse: collapse;
+            border: 1px solid #ddd;
+            width: 100%;
+            max-width: 100%;
+            background-color: #fff;
+            margin: auto;
+        }
+
+        .mytable th,
+        .mytable td {
+            padding: 4px;
+            line-height: 1.42857143;
+            vertical-align: top;
+            border: 1px solid #ddd;
+        }
     </style>
 </head>
 
 <body>
 
     <!-- Add loader container -->
-    <div id="loader" class="loader" style="display:none;"></div>
+    <div class="myMain">
+        <div class="myMid">
+            <div id="loader" class="loader" style="display:none;"></div>
 
-    <button onclick="generateData()">Generate</button>
-    <button onclick="exportToCSV()">Export</button>
-    <!-- <a href="export_api.php">Export</a> -->
-    <button onclick="saveData()">Save</button>
+            <div class="myButtonDiv">
+                <button onclick="generateData()" class="myButton">Generate</button>
+                <button onclick="exportToCSV()" class="myButton">Export</button>
+                <!-- <a href="export_api.php">Export</a> -->
+                <button onclick="saveData()" class="myButton">Save</button>
+            </div>
 
-    <table border="1" id="data-table">
-        <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Body</th>
-        </tr>
-    </table>
+            <table id="data-table" class="mytable">
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Body</th>
+                </tr>
+            </table>
+        </div>
 
-    <ul>
-
-    </ul>
+    </div>
 
     <!-- Add JavaScript for loader display and API call -->
     <script>
