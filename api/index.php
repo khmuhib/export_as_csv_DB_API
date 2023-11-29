@@ -17,11 +17,11 @@
 
         /* Loader CSS Start */
         .loader {
-            border: 16px solid #f3f3f3;
-            border-top: 16px solid #3498db;
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #1fb5ad;
             border-radius: 50%;
-            width: 120px;
-            height: 120px;
+            width: 60px;
+            height: 60px;
             animation: spin 1s linear infinite;
             margin: auto;
             margin-top: 20px;
@@ -54,6 +54,7 @@
             border: 1px solid #ddd;
             margin-top: 20px;
             margin-bottom: 20px;
+            overflow: hidden;
         }
 
         .myButtonDiv {
@@ -70,14 +71,7 @@
             line-height: 1.42857143;
             text-align: center;
             white-space: nowrap;
-            vertical-align: middle;
-            -ms-touch-action: manipulation;
-            touch-action: manipulation;
             cursor: pointer;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
             background-image: none;
             border: 1px solid transparent;
             border-radius: 4px;
@@ -90,11 +84,14 @@
             background-color: #1CA59E;
         }
 
+        .table-container {
+            overflow-x: auto;
+        }
+
         .mytable {
             border-collapse: collapse;
             border: 1px solid #ddd;
             width: 100%;
-            max-width: 100%;
             background-color: #fff;
             margin: 10px auto;
         }
@@ -114,22 +111,41 @@
     <!-- Add loader container -->
     <div class="myMain">
         <div class="myMid">
-            <div id="loader" class="loader" style="display:none;"></div>
+
+            <!-- <div id="loader" class="loader" style="display:none;"></div> -->
 
             <div class="myButtonDiv">
                 <button onclick="generateData()" class="myButton">Generate</button>
                 <button onclick="exportToCSV()" class="myButton">Export</button>
                 <!-- <a href="export_api.php">Export</a> -->
-                <button onclick="saveData()" class="myButton">Save</button>
+                <button onclick="saveData()" class="myButton">Save Records</button>
             </div>
 
-            <table id="data-table" class="mytable">
-                <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th>Body</th>
-                </tr>
-            </table>
+            <div class="table-container">
+                <table id="data-table" class="mytable">
+                    <tr>
+                        <th>Res ID</th>
+                        <th>Res Name</th>
+                        <th>Invoice Email</th>
+                        <th>Total Sales</th>
+                        <th>Netpay Orders</th>
+                        <th>Netpay Sales</th>
+                        <th>Netpay Charges</th>
+                        <th>Service Charge</th>
+                        <th>Invoice total</th>
+                        <th>Card Status</th>
+                    </tr>
+                    <tr>
+                        <td colspan="10" align="center" id="no-data">
+                            <div id="loader" class="loader" style="display:none;"></div>
+                            <h5>No Data Found</h5>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+
+
         </div>
 
     </div>
@@ -143,6 +159,16 @@
             } else {
                 console.error("Loader element not found");
             }
+        }
+
+        function noData() {
+            var noDataElement = document.getElementById("no-data");
+            if (noDataElement) {
+                noDataElement.style.display = "none";
+            } else {
+                console.error("No data element not found");
+            }
+
         }
 
         function hideLoader() {
@@ -161,6 +187,7 @@
                 const api_url = "https://jsonplaceholder.typicode.com/posts";
                 const response = await fetch(api_url);
                 const data = await response.json();
+                noData();
                 populateTable(data);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -178,10 +205,25 @@
                 var cell1 = row.insertCell(0);
                 var cell2 = row.insertCell(1);
                 var cell3 = row.insertCell(2);
+                var cell4 = row.insertCell(3);
+                var cell5 = row.insertCell(4);
+                var cell6 = row.insertCell(5);
+                var cell7 = row.insertCell(6);
+                var cell8 = row.insertCell(7);
+                var cell9 = row.insertCell(8);
+                var cell10 = row.insertCell(9);
 
                 cell1.innerHTML = data[i].id;
                 cell2.innerHTML = data[i].title;
                 cell3.innerHTML = data[i].body;
+                cell4.innerHTML = data[i].body;
+                cell5.innerHTML = data[i].body;
+                cell5.innerHTML = data[i].body;
+                cell6.innerHTML = data[i].body;
+                cell7.innerHTML = data[i].body;
+                cell8.innerHTML = data[i].body;
+                cell9.innerHTML = data[i].body;
+                cell10.innerHTML = data[i].body;
             }
         }
 
@@ -213,7 +255,7 @@
             csvContent += headerArray.join(",") + "\n";
 
             // Get the table data
-            for (var i = 1; i < rows.length; i++) {
+            for (var i = 2; i < rows.length; i++) {
                 var cells = rows[i].getElementsByTagName("td");
                 var rowArray = [];
 
