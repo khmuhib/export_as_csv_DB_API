@@ -103,6 +103,40 @@
             vertical-align: top;
             border: 1px solid #ddd;
         }
+
+        .myComboBox {
+            display: inline-block;
+            padding: 6px 12px;
+            margin-bottom: 0;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1.42857143;
+            text-align: center;
+            white-space: nowrap;
+            cursor: pointer;
+            background-image: none;
+            border: 1px solid #1fb5ad;
+            /* Match the button border color */
+            border-radius: 4px;
+            background-color: #1fb5ad;
+            /* Set a background color for the combo box */
+            color: #fff;
+            /* Match the button text color */
+            margin: 4px 2px;
+        }
+
+        .myComboBox:hover {
+            background-color: #1CA59E;
+        }
+
+        /* Style for the arrow in the combo box */
+        .myComboBox::after {
+            content: '▼';
+            /* Unicode for a down arrow */
+            font-size: 14px;
+            margin-left: 5px;
+            /* Adjust the spacing between text and arrow */
+        }
     </style>
 </head>
 
@@ -115,6 +149,16 @@
             <!-- <div id="loader" class="loader" style="display:none;"></div> -->
 
             <div class="myButtonDiv">
+                <select class="myComboBox">
+                    <option value="option1">Select year no</option>
+                    <option value="option2">Option 2</option>
+                    <option value="option3">Option 3</option>
+                </select>
+                <select class="myComboBox">
+                    <option value="option1">Select week no</option>
+                    <option value="option2">Option 2</option>
+                    <option value="option3">Option 3</option>
+                </select>
                 <button onclick="generateData()" class="myButton">Generate</button>
                 <button onclick="exportToCSV()" class="myButton">Export</button>
                 <!-- <a href="export_api.php">Export</a> -->
@@ -124,8 +168,8 @@
             <div class="table-container">
                 <table id="data-table" class="mytable">
                     <tr>
-                        <th>Res ID</th>
-                        <th>Res Name</th>
+                        <th style="width: 100px;">Restaurant ID</th>
+                        <th style="width: 120px;">Restaurant Name</th>
                         <th>Invoice Email</th>
                         <th>Total Sales</th>
                         <th>Netpay Orders</th>
