@@ -53,6 +53,7 @@
             border-radius: 10px;
             border: 1px solid #ddd;
             margin-top: 20px;
+            margin-bottom: 20px;
         }
 
         .myButtonDiv {
@@ -95,7 +96,7 @@
             width: 100%;
             max-width: 100%;
             background-color: #fff;
-            margin: auto;
+            margin: 10px auto;
         }
 
         .mytable th,
