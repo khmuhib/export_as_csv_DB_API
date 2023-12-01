@@ -149,21 +149,55 @@
             <!-- <div id="loader" class="loader" style="display:none;"></div> -->
 
             <div class="myButtonDiv">
-                <select class="myComboBox">
-                    <option value="option1">Select year no</option>
-                    <option value="option2">Option 2</option>
-                    <option value="option3">Option 3</option>
-                </select>
-                <select class="myComboBox">
-                    <option value="option1">Select week no</option>
-                    <option value="option2">Option 2</option>
-                    <option value="option3">Option 3</option>
-                </select>
-                <button onclick="generateData()" class="myButton">Generate</button>
+                <form id="myForm" method="POST" class="myButtonDiv">
+                    <select class="myComboBox">
+                        <option value="option1">Select week year</option>
+                        <option value="47-2023">47-2023</option>
+                        <option value="48-2023">48-2023</option>
+                        <option value="49-2023">49-2023</option>
+                        <option value="50-2023">50-2023</option>
+                    </select>
+                    <button type="submit" name="submit" class="myButton">Generate</button>
+                    <button onclick="saveData()" class="myButton">Save Records</button>
+                </form>
+
                 <button onclick="exportToCSV()" class="myButton">Export</button>
-                <!-- <a href="export_api.php">Export</a> -->
-                <button onclick="saveData()" class="myButton">Save Records</button>
+
             </div>
+
+            <?php
+
+            $invoice_data = array();
+
+            if (isset($_POST['submit'])) {
+
+                $api_url = "http://smartrestaurantsolutions.com/mobileapi-v2/v3/Tigger.php?funId=600&week_year=47-2023&rest_id=57";
+                $token = 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjB9.5lY2yythTRWK0Hnbgl4aOjbBsFAfoBQbuhqEQCz1EmWxlMLWA3VG1vIs6mZ5lFw6cH55SefHsuQ7M9gAeIRCjA';
+
+                // Make a cURL request to the API endpoint
+                $ch = curl_init($api_url);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+                // Pass the Bearer token in the Authorization header
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                    'Content-Type: application/json',
+                    'Authorization: Bearer ' . $token
+                ));
+
+                $response = curl_exec($ch);
+                curl_close($ch);
+
+                // Return the JSON response
+                //header('Content-Type: application/json');
+                //header('Access-Control-Allow-Origin: *'); // Change * to your actual allowed origin
+                //header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+                //header('Access-Control-Allow-Headers: Authorization, Content-Type');
+                if (!empty($response)) {
+                    $invoice_data = json_decode($response);
+                    $Loader = false;
+                }
+            }
+            ?>
 
             <div class="table-container">
                 <table id="data-table" class="mytable">
@@ -179,12 +213,39 @@
                         <th>Invoice total</th>
                         <th>Card Status</th>
                     </tr>
-                    <tr>
-                        <td colspan="10" align="center" id="no-data">
-                            <div id="loader" class="loader" style="display:none;"></div>
-                            <h5>No Data Found</h5>
-                        </td>
-                    </tr>
+                    <?php
+
+                    if (!empty($invoice_data->invoice)) {
+                        //print_r($invoice_data);
+                        foreach ($invoice_data->invoice as $data) {
+                            echo '<tr>';
+                            echo '<td>' . $data->restaurant_id . '</td>';
+                            echo '<td>' . $data->restaurant_name . '</td>';
+                            echo '<td>' . $data->invoice_email . '</td>';
+                            echo '<td>' . $data->total_sales . '</td>';
+                            echo '<td>' . $data->netpay_orders . '</td>';
+                            echo '<td>' . $data->netpay_sales . '</td>';
+                            echo '<td>' . $data->netpay_charges . '</td>';
+                            echo '<td>' . $data->service_charge . '</td>';
+                            echo '<td> </td>';
+                            echo '<td>' . $data->card_status . '</td>';
+                            echo '</tr>';
+                        }
+                    } else {
+                    ?>
+                        <tr>
+                            <td colspan="10" align="center" id="no-data">
+
+                                <div id="loader" class="loader" style="display:none;"></div>
+
+                                <h5>No Data Found</h5>
+                            </td>
+                        </tr>
+
+                    <?php
+                    }
+                    ?>
+
                 </table>
             </div>
 
@@ -228,11 +289,25 @@
             showLoader();
 
             try {
-                const api_url = "https://jsonplaceholder.typicode.com/posts";
-                const response = await fetch(api_url);
+                const api_url = "http://smartrestaurantsolutions.com/mobileapi-v2/v3/Tigger.php?funId=600&week_year=47-2023&rest_id=57";
+                const token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjB9.5lY2yythTRWK0Hnbgl4aOjbBsFAfoBQbuhqEQCz1EmWxlMLWA3VG1vIs6mZ5lFw6cH55SefHsuQ7M9gAeIRCjA";
+
+                const response = await fetch(api_url, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+
+                        "Access-Control-Allow-Origin": "*",
+                        "Access-Control-Allow-Credentials": "true",
+                        "Access-Control-Allow-Methods": "GET,HEAD,OPTIONS,POST,PUT",
+                        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+                    },
+                });
+
                 const data = await response.json();
                 noData();
                 populateTable(data);
+
             } catch (error) {
                 console.error('Error fetching data:', error);
             } finally {
@@ -299,7 +374,7 @@
             csvContent += headerArray.join(",") + "\n";
 
             // Get the table data
-            for (var i = 2; i < rows.length; i++) {
+            for (var i = 1; i < rows.length; i++) {
                 var cells = rows[i].getElementsByTagName("td");
                 var rowArray = [];
 
