@@ -304,39 +304,23 @@ if (isset($_POST['submit'])) {
         }
 
         function exportToCSV() {
-            var table = document.getElementById("dataTable");
-            var rows = table.getElementsByTagName("tr");
+            var table = $('#dataTable').DataTable();
             var csvContent = "data:text/csv;charset=utf-8,";
 
             // Get the table headers
-            var headerRow = rows[0];
-            var headerCells = headerRow.getElementsByTagName("th");
-            var headerArray = [];
-
-            for (var h = 0; h < headerCells.length; h++) {
-                headerArray.push(headerCells[h].innerText);
-            }
-
+            var headerArray = table.columns().header().toArray().map(header => $(header).text());
             csvContent += headerArray.join(",") + "\n";
 
-            // Get the table data
-            for (var i = 1; i < rows.length; i++) {
-                var cells = rows[i].getElementsByTagName("td");
-                var rowArray = [];
-
-                for (var j = 0; j < cells.length; j++) {
-                    if (j === 2) { // Assuming Invoice Email is at index 2 (adjust as needed)
-                        // Retrieve and format multiple email addresses from HTML content
-                        var emailContent = cells[j].innerHTML;
-                        var emailAddresses = emailContent.split('<br>').map(email => `"${email.trim()}"`).join(',');
-                        rowArray.push(emailAddresses);
-                    } else {
-                        rowArray.push(`"${cells[j].innerText}"`);
+            // Iterate through all rows and retrieve data
+            table.rows().every(function() {
+                var rowArray = this.data().map(cell => {
+                    if (cell instanceof Object && cell !== null) {
+                        return `"${cell}"`; // Handle case where cell is an object (e.g., email)
                     }
-                }
-
+                    return `"${cell}"`;
+                });
                 csvContent += rowArray.join(",") + "\n";
-            }
+            });
 
             // Create a download link
             var encodedUri = encodeURI(csvContent);
