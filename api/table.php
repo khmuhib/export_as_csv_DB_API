@@ -215,68 +215,44 @@ if (isset($_POST['submit'])) {
                 <button onclick="exportToCSV()" class="myButton">Export</button>
             </div>
 
-            <?php
-            // Display loader while waiting for the API response
-            $loaderVisible = '';
-            if (empty($invoice_data->invoice)) {
-                $loaderVisible = '<div id="loader"></div>';
-            } else {
-                $loaderVisible = '';
-            }
-            ?>
-
             <div class="table-container" style="clear: right;">
-                <table id="dataTable" class="display" style="width:100%">
+                <table id="data-table" class="display" style="width:100%">
                     <thead>
                         <tr>
-                            <th>Restaurant ID</th>
-                            <th>Restaurant Name</th>
-                            <th>Invoice Email</th>
-                            <th>Total Sales</th>
-                            <th>Netpay Orders</th>
-                            <th>Netpay Sales</th>
-                            <th>Netpay Charges</th>
-                            <th>Service Charge</th>
-                            <th>Invoice total</th>
-                            <th>Card Status</th>
+                            <th>Name</th>
+                            <th>Position</th>
+                            <th>Office</th>
+                            <th>Age</th>
+                            <th>Start date</th>
+                            <th>Salary</th>
                         </tr>
                     </thead>
-
                     <tbody>
-                        <?php
-
-                        if (!empty($invoice_data->invoice)) {
-
-                            foreach ($invoice_data->invoice as $data) {
-                                echo '<tr>';
-                                echo '<td>' . $data->restaurant_id . '</td>';
-                                echo '<td>' . $data->restaurant_name . '</td>';
-                                echo '<td>' . $data->invoice_email . '</td>';
-                                echo '<td>' . $data->total_sales . '</td>';
-                                echo '<td>' . $data->netpay_orders . '</td>';
-                                echo '<td>' . $data->netpay_sales . '</td>';
-                                echo '<td>' . $data->netpay_charges . '</td>';
-                                echo '<td>' . $data->service_charge . '</td>';
-                                echo '<td> ' . $data->invoice_total . ' </td>';
-                                echo '<td>' . $data->card_status . '</td>';
-                                echo '</tr>';
-                            }
-                        }
-                        ?>
+                        <tr>
+                            <td data-search="Tiger Nixon">T. Nixon</td>
+                            <td>System Architect</td>
+                            <td>Edinburgh</td>
+                            <td>61</td>
+                            <td data-order="1303689600">Mon 25th Apr 11</td>
+                            <td data-order="320800">$320,800/y</td>
+                        </tr>
+                        <tr>
+                            <td data-search="Garrett Winters">G. Winters</td>
+                            <td>Accountant</td>
+                            <td>Tokyo</td>
+                            <td>63</td>
+                            <td data-order="1311552000">Mon 25th Jul 11</td>
+                            <td data-order="170750">$170,750/y</td>
+                        </tr>
                     </tbody>
-
                     <tfoot>
                         <tr>
-                            <th>Restaurant ID</th>
-                            <th>Restaurant Name</th>
-                            <th>Invoice Email</th>
-                            <th>Total Sales</th>
-                            <th>Netpay Orders</th>
-                            <th>Netpay Sales</th>
-                            <th>Netpay Charges</th>
-                            <th>Service Charge</th>
-                            <th>Invoice total</th>
-                            <th>Card Status</th>
+                            <th>Name</th>
+                            <th>Position</th>
+                            <th>Office</th>
+                            <th>Age</th>
+                            <th>Start date</th>
+                            <th>Salary</th>
                         </tr>
                     </tfoot>
                 </table>
@@ -291,61 +267,11 @@ if (isset($_POST['submit'])) {
 
     <!-- Add JavaScript for loader display and API call -->
     <script>
-        new DataTable('#dataTable');
+        // $(document).ready(function() {
+        //     $('#myTable').DataTable();
+        // });
 
-        function saveData() {
-            showLoader();
-            // Add your save data logic here
-            // After data is saved, call hideLoader() to hide the loader
-            // For simplicity, I'm using a setTimeout to simulate data saving
-            setTimeout(function() {
-                hideLoader();
-            }, 2000);
-        }
-
-        function exportToCSV() {
-            var table = document.getElementById("dataTable");
-            var rows = table.getElementsByTagName("tr");
-            var csvContent = "data:text/csv;charset=utf-8,";
-
-            // Get the table headers
-            var headerRow = rows[0];
-            var headerCells = headerRow.getElementsByTagName("th");
-            var headerArray = [];
-
-            for (var h = 0; h < headerCells.length; h++) {
-                headerArray.push(headerCells[h].innerText);
-            }
-
-            csvContent += headerArray.join(",") + "\n";
-
-            // Get the table data
-            for (var i = 1; i < rows.length; i++) {
-                var cells = rows[i].getElementsByTagName("td");
-                var rowArray = [];
-
-                for (var j = 0; j < cells.length; j++) {
-                    if (j === 2) { // Assuming Invoice Email is at index 2 (adjust as needed)
-                        // Retrieve and format multiple email addresses from HTML content
-                        var emailContent = cells[j].innerHTML;
-                        var emailAddresses = emailContent.split('<br>').map(email => `"${email.trim()}"`).join(',');
-                        rowArray.push(emailAddresses);
-                    } else {
-                        rowArray.push(`"${cells[j].innerText}"`);
-                    }
-                }
-
-                csvContent += rowArray.join(",") + "\n";
-            }
-
-            // Create a download link
-            var encodedUri = encodeURI(csvContent);
-            var link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "table_data.csv");
-            document.body.appendChild(link);
-            link.click();
-        }
+        new DataTable('#data-table');
     </script>
 
 </body>
