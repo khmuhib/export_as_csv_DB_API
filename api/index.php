@@ -250,7 +250,7 @@ if (isset($_POST['submit'])) {
                             foreach ($invoice_data->invoice as $data) {
                                 echo '<tr>';
                                 echo '<td>' . $data->restaurant_id . '</td>';
-                                echo '<td>' . $data->restaurant_name . '</td>';
+                                echo '<td style="width: 350px;">' . $data->restaurant_name . '</td>';
                                 echo '<td>' . $data->invoice_email . '</td>';
                                 echo '<td>' . $data->total_sales . '</td>';
                                 echo '<td>' . $data->netpay_orders . '</td>';
