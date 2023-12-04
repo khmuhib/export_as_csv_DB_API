@@ -198,10 +198,10 @@ if (isset($_POST['submit'])) {
                     ?>
                     <select class="myComboBox" name="week_year">
                         <option value="">Select week year</option>
-                        <option value="47-2023">47-2023</option>
-                        <option value="48-2023">48-2023</option>
-                        <option value="49-2023">49-2023</option>
-                        <option value="50-2023">50-2023</option>
+                        <option value="47-2023" <?php if (isset($_POST['week_year']) && $_POST['week_year'] == '47-2023') echo 'selected'; ?>>47-2023</option>
+                        <option value="48-2023" <?php if (isset($_POST['week_year']) && $_POST['week_year'] == '48-2023') echo 'selected'; ?>>48-2023</option>
+                        <option value="49-2023" <?php if (isset($_POST['week_year']) && $_POST['week_year'] == '49-2023') echo 'selected'; ?>>49-2023</option>
+                        <option value="50-2023" <?php if (isset($_POST['week_year']) && $_POST['week_year'] == '50-2023') echo 'selected'; ?>>50-2023</option>
                     </select>
                     <button type="submit" name="submit" class="myButton">Generate</button>
                     <button onclick="saveData()" class="myButton">Save Records</button>
@@ -271,6 +271,18 @@ if (isset($_POST['submit'])) {
 
     <!-- Add JavaScript for loader display and API call -->
     <script>
+        function validateWeekYear() {
+            var selectedValue = document.querySelector('.myComboBox').value;
+
+            if (!selectedValue) {
+                alert('Please select a week year.');
+                return false;
+            }
+
+            return true;
+        }
+
+
         function showLoader() {
             var loaderElement = document.getElementById("loader");
             if (loaderElement) {
