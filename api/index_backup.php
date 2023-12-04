@@ -1,45 +1,3 @@
-<?php
-$invoice_data = array();
-$loaderVisible = false;
-$errorMsg = '';
-
-if (isset($_POST['submit'])) {
-    // Validate if week_year is selected
-    if (isset($_POST['week_year']) && !empty($_POST['week_year'])) {
-        $week_year = $_POST['week_year'];
-
-        // Display loader while waiting for the API response
-        $loaderVisible = true;
-
-        $api_url = "http://smartrestaurantsolutions.com/mobileapi-v2/v3/Tigger.php?funId=600&week_year=$week_year&rest_id=57";
-        $token = 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjB9.5lY2yythTRWK0Hnbgl4aOjbBsFAfoBQbuhqEQCz1EmWxlMLWA3VG1vIs6mZ5lFw6cH55SefHsuQ7M9gAeIRCjA';
-
-        // Make a cURL request to the API endpoint
-        $ch = curl_init($api_url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-        // Pass the Bearer token in the Authorization header
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Content-Type: application/json',
-            'Authorization: Bearer ' . $token
-        ));
-
-        $response = curl_exec($ch);
-        curl_close($ch);
-
-        // Hide loader after API response
-        $loaderVisible = false;
-
-        if (!empty($response)) {
-            $invoice_data = json_decode($response);
-        }
-    } else {
-        $errorMsg = 'Please select a week and year.';
-    }
-}
-?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -190,28 +148,58 @@ if (isset($_POST['submit'])) {
 
             <div class="myButtonDiv">
                 <form id="myForm" method="POST" class="myButtonDiv">
-                    <?php
-                    // Display error message if validation fails
-                    if (!empty($errorMsg)) {
-                        echo '<p style="color: red; float: right";>' . $errorMsg . '</p>';
-                    }
-                    ?>
                     <select class="myComboBox" name="week_year">
-                        <option value="">Select week year</option>
+                        <option value="option1">Select week year</option>
                         <option value="47-2023">47-2023</option>
                         <option value="48-2023">48-2023</option>
                         <option value="49-2023">49-2023</option>
                         <option value="50-2023">50-2023</option>
                     </select>
                     <button type="submit" name="submit" class="myButton">Generate</button>
-                    <button onclick="saveData()" class="myButton">Save Records</button>
                 </form>
 
                 <button onclick="exportToCSV()" class="myButton">Export</button>
+                <button onclick="saveData()" class="myButton">Save Records</button>
 
             </div>
 
-            <div class="table-container" style="clear: right;">
+            <?php
+            $invoice_data = array();
+            $loaderVisible = false;
+
+            if (isset($_POST['submit'])) {
+
+                $week_year = $_POST['week_year'];
+
+                // Display loader while waiting for the API response
+                $loaderVisible = true;
+
+                $api_url = "http://smartrestaurantsolutions.com/mobileapi-v2/v3/Tigger.php?funId=600&week_year=$week_year&rest_id=57";
+                $token = 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjB9.5lY2yythTRWK0Hnbgl4aOjbBsFAfoBQbuhqEQCz1EmWxlMLWA3VG1vIs6mZ5lFw6cH55SefHsuQ7M9gAeIRCjA';
+
+                // Make a cURL request to the API endpoint
+                $ch = curl_init($api_url);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+                // Pass the Bearer token in the Authorization header
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                    'Content-Type: application/json',
+                    'Authorization: Bearer ' . $token
+                ));
+
+                $response = curl_exec($ch);
+                curl_close($ch);
+
+                // Hide loader after API response
+                $loaderVisible = false;
+
+                if (!empty($response)) {
+                    $invoice_data = json_decode($response);
+                }
+            }
+            ?>
+
+            <div class="table-container">
                 <table id="data-table" class="mytable">
                     <tr>
                         <th style="width: 100px;">Restaurant ID</th>
@@ -228,7 +216,6 @@ if (isset($_POST['submit'])) {
                     <?php
 
                     if (!empty($invoice_data->invoice)) {
-                        echo $loaderVisible;
                         //print_r($invoice_data);
                         foreach ($invoice_data->invoice as $data) {
                             echo '<tr>';
@@ -248,7 +235,6 @@ if (isset($_POST['submit'])) {
                     ?>
                         <tr>
                             <td colspan="10" align="center" id="no-data">
-
 
                                 <!-- <div id="loader" class="loader" style="display:none;"></div> -->
                                 <div id="loader" class="loader" style="<?php echo $loaderVisible ? 'display:block;' : 'display:none;'; ?>"></div>
@@ -299,6 +285,67 @@ if (isset($_POST['submit'])) {
             }
         }
 
+        async function generateData() {
+            showLoader();
+
+            try {
+                const api_url = "http://smartrestaurantsolutions.com/mobileapi-v2/v3/Tigger.php?funId=600&week_year=47-2023&rest_id=57";
+                const token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjB9.5lY2yythTRWK0Hnbgl4aOjbBsFAfoBQbuhqEQCz1EmWxlMLWA3VG1vIs6mZ5lFw6cH55SefHsuQ7M9gAeIRCjA";
+
+                const response = await fetch(api_url, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+
+                        "Access-Control-Allow-Origin": "*",
+                        "Access-Control-Allow-Credentials": "true",
+                        "Access-Control-Allow-Methods": "GET,HEAD,OPTIONS,POST,PUT",
+                        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+                    },
+                });
+
+                const data = await response.json();
+                noData();
+                populateTable(data);
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            } finally {
+                hideLoader();
+            }
+        }
+
+        function populateTable(data) {
+            var table = document.getElementById("data-table");
+            // table.innerHTML = ""; // Clear existing table data
+
+            for (var i = 0; i < data.length; i++) {
+                var row = table.insertRow(); // Without specifying an index, it adds a new row at the end
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                var cell4 = row.insertCell(3);
+                var cell5 = row.insertCell(4);
+                var cell6 = row.insertCell(5);
+                var cell7 = row.insertCell(6);
+                var cell8 = row.insertCell(7);
+                var cell9 = row.insertCell(8);
+                var cell10 = row.insertCell(9);
+
+                cell1.innerHTML = data[i].id;
+                cell2.innerHTML = data[i].title;
+                cell3.innerHTML = data[i].body;
+                cell4.innerHTML = data[i].body;
+                cell5.innerHTML = data[i].body;
+                cell5.innerHTML = data[i].body;
+                cell6.innerHTML = data[i].body;
+                cell7.innerHTML = data[i].body;
+                cell8.innerHTML = data[i].body;
+                cell9.innerHTML = data[i].body;
+                cell10.innerHTML = data[i].body;
+            }
+        }
+
 
         function saveData() {
             showLoader();
@@ -332,14 +379,7 @@ if (isset($_POST['submit'])) {
                 var rowArray = [];
 
                 for (var j = 0; j < cells.length; j++) {
-                    if (j === 2) { // Assuming Invoice Email is at index 2 (adjust as needed)
-                        // Retrieve and format multiple email addresses from HTML content
-                        var emailContent = cells[j].innerHTML;
-                        var emailAddresses = emailContent.split('<br>').map(email => `"${email.trim()}"`).join(',');
-                        rowArray.push(emailAddresses);
-                    } else {
-                        rowArray.push(`"${cells[j].innerText}"`);
-                    }
+                    rowArray.push(cells[j].innerText);
                 }
 
                 csvContent += rowArray.join(",") + "\n";
