@@ -60,7 +60,7 @@ if (isset($_POST['submit'])) {
             margin: 0;
             padding: 0;
             background-color: #F1F2F7;
-            font-family: tahoma;
+            font-family: tahoma !important;
         }
 
         /* Loader CSS Start */
@@ -184,6 +184,51 @@ if (isset($_POST['submit'])) {
             font-size: 14px;
             margin-left: 5px;
             /* Adjust the spacing between text and arrow */
+        }
+
+        .paging_simple_numbers .current {
+            background-color: #1fb5ad !important;
+            color: #fff !important;
+            border: #1fb5ad !important;
+            font-family: tahoma !important;
+        }
+
+        .dataTables_paginate .next {
+            background-color: #1fb5ad !important;
+            color: #fff !important;
+            border: #1fb5ad !important;
+            border-radius: 5px !important;
+        }
+
+        .dataTables_paginate .previous {
+            background-color: #1fb5ad !important;
+            color: #fff !important;
+            border: #1fb5ad !important;
+            border-radius: 5px !important;
+        }
+
+        .dataTables_paginate .next:hover {
+            background-color: #1CA59E !important;
+        }
+
+        .dataTables_paginate .previous:hover {
+            background-color: #1CA59E !important;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
+            color: #fff !important;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover {
+            color: #fff !important;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+            color: #fff !important;
+        }
+
+        .dataTable {
+            margin-top: 10px !important;
         }
     </style>
 </head>
